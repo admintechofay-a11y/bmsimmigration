@@ -102,7 +102,6 @@ bmsimmigration/
     │   │   ├── CanvasLoader.jsx       # Branded Three.js loader
     │   │   └── Globe2DFallback.jsx    # Responsive 2D fallback
     │   ├── common/
-    │   │   ├── CustomCursor.jsx       # Smooth desktop cursor
     │   │   ├── ScrollProgressBar.jsx  # Top progress bar
     │   │   ├── FloatingWhatsApp.jsx   # WhatsApp quick chat launcher
     │   │   ├── StickyBookingCTA.jsx   # Sticky assessment bar

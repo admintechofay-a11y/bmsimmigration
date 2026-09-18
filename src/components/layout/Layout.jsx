@@ -3,7 +3,6 @@ import { Outlet, useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import CustomCursor from '../common/CustomCursor';
 import ScrollProgressBar from '../common/ScrollProgressBar';
 import FloatingWhatsApp from '../common/FloatingWhatsApp';
 import StickyBookingCTA from '../common/StickyBookingCTA';
@@ -48,7 +47,6 @@ export default function Layout() {
 
   return (
     <div className="relative min-h-screen bg-navy-950 text-slate-100 flex flex-col selection:bg-gold-500/25 selection:text-gold-200">
-      <CustomCursor />
       <ScrollProgressBar />
 
       <Navbar onOpenAssessment={() => setIsAssessmentOpen(true)} />
