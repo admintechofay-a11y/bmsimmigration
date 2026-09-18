@@ -1,0 +1,92 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --primary: #D4A44A;
+  --secondary: #B8860B;
+  --accent: #2F80ED;
+  --bg-dark: #050816;
+  --surface: #0B1120;
+  --surface-light: #111827;
+  --border-gold: rgba(212, 164, 74, 0.2);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #050816;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(212, 164, 74, 0.35);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(212, 164, 74, 0.65);
+}
+
+/* Typography styles */
+.font-display {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-sans {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.font-sora {
+  font-family: 'Sora', 'Inter', sans-serif;
+}
+
+/* Glassmorphic Components */
+.glass-panel {
+  background: linear-gradient(135deg, rgba(11, 17, 32, 0.75) 0%, rgba(5, 8, 22, 0.88) 100%);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(212, 164, 74, 0.18);
+}
+
+.glass-panel-hover {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-panel-hover:hover {
+  border-color: rgba(212, 164, 74, 0.45);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 164, 74, 0.15);
+  transform: translateY(-4px);
+}
+
+.glass-card-gold {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(212, 164, 74, 0.2);
+  backdrop-filter: blur(12px);
+}
+
+/* Luxury Gold Gradients */
+.text-gold-gradient {
+  background: linear-gradient(135deg, #FDE047 0%, #D4A44A 50%, #B8860B 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.text-blue-gradient {
+  background: linear-gradient(135deg, #93C5FD 0%, #2F80ED 50%, #1D4ED8 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.bg-gold-gradient {
+  background: linear-gradient(135deg, #F4C76A 0%, #D4A44A 50%, #B8860B 100%);
+}
+
+.bg-gold-gradient-hover:hover {
+  background: linear-gradient(135deg, #FFE082 0%, #E5B35A 50%, #C9961A 100%);
+}
+
+/* Shimmer overlay */
+.shimmer-mask {
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  background-size: 200% 100%;
+}
