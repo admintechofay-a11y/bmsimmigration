@@ -17,17 +17,17 @@ export default function FAQAccordion() {
   };
 
   return (
-    <section className="py-20 bg-gradient-to-b from-navy-950 via-navy-900 to-navy-950 relative">
+    <section className="py-20 bg-tint/60 relative">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
         <div className="text-center mb-12 space-y-3">
-          <span className="text-xs uppercase tracking-widest text-gold-400 font-semibold px-3 py-1 rounded-full bg-gold-500/10 border border-gold-500/20">
+          <span className="text-xs uppercase tracking-widest text-gold-700 font-bold px-3 py-1 rounded-full bg-gold-50 border border-gold-200">
             Got Questions?
           </span>
-          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white font-display">
+          <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-ink-900 font-display">
             Frequently Asked <span className="text-gold-gradient">Questions</span>
           </h2>
-          <p className="text-sm sm:text-base text-slate-300">
+          <p className="text-sm sm:text-base text-ink-600 max-w-2xl mx-auto">
             Clear, straightforward answers about our study visa, visitor visa, SOP preparation, and refusal handling services.
           </p>
         </div>
@@ -43,8 +43,8 @@ export default function FAQAccordion() {
               }}
               className={`px-4 py-2 rounded-xl text-xs font-semibold transition ${
                 selectedCategory === cat
-                  ? 'bg-gold-500 text-navy-950 font-bold shadow-gold-glow'
-                  : 'bg-navy-900/80 text-slate-300 hover:text-white border border-slate-800'
+                  ? 'bg-ink-900 text-white shadow-soft-sm font-bold'
+                  : 'bg-white text-ink-700 hover:text-ink-900 border border-border-light hover:border-gold-300'
               }`}
             >
               {cat}
@@ -58,11 +58,11 @@ export default function FAQAccordion() {
             const isOpen = openIndex === idx;
             return (
               <div
-                key={idx}
+                key={faq.id || faq.question}
                 className={`rounded-2xl border transition-all duration-300 overflow-hidden ${
                   isOpen
-                    ? 'bg-navy-900/90 border-gold-500/40 shadow-card-elevated'
-                    : 'bg-navy-900/50 border-slate-800/80 hover:border-gold-500/20'
+                    ? 'bg-white border-gold-300 shadow-soft-md'
+                    : 'bg-white/80 border-border-light hover:border-gold-200 hover:shadow-soft-sm'
                 }`}
               >
                 <button
@@ -70,14 +70,14 @@ export default function FAQAccordion() {
                   className="w-full px-6 py-5 flex items-center justify-between text-left gap-4 focus:outline-none"
                   aria-expanded={isOpen}
                 >
-                  <span className="text-base font-bold text-white font-display">
+                  <span className="text-base font-bold text-ink-900 font-display">
                     {faq.question}
                   </span>
                   <div
                     className={`w-8 h-8 rounded-lg flex items-center justify-center transition-transform duration-300 flex-shrink-0 ${
                       isOpen
-                        ? 'bg-gold-500 text-navy-950 rotate-180'
-                        : 'bg-navy-800 text-slate-400'
+                        ? 'bg-gold-500 text-ink-900 rotate-180'
+                        : 'bg-tint text-ink-500'
                     }`}
                   >
                     <ChevronDown className="w-4 h-4" />
@@ -85,10 +85,10 @@ export default function FAQAccordion() {
                 </button>
 
                 {isOpen && (
-                  <div className="px-6 pb-6 pt-1 text-sm text-slate-300 leading-relaxed border-t border-slate-800/60 font-sans">
+                  <div className="px-6 pb-6 pt-1 text-sm text-ink-600 leading-relaxed border-t border-border-light/80 font-sans">
                     <p>{faq.answer}</p>
                     <div className="mt-3">
-                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-gold-500/10 text-gold-400 border border-gold-500/20">
+                      <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-gold-50 text-gold-700 border border-gold-200">
                         {faq.category}
                       </span>
                     </div>

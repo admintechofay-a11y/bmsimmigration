@@ -1,69 +1,86 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
-import Lenis from 'lenis';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import ScrollProgressBar from '../common/ScrollProgressBar';
 import FloatingWhatsApp from '../common/FloatingWhatsApp';
 import StickyBookingCTA from '../common/StickyBookingCTA';
 import EligibilityModal from '../forms/EligibilityModal';
+import Background3DEffect from '../common/Background3DEffect';
+import LiveSuccessToast from '../common/LiveSuccessToast';
 
 export default function Layout() {
   const [isAssessmentOpen, setIsAssessmentOpen] = useState(false);
+  const [assessmentCountry, setAssessmentCountry] = useState('Canada');
   const location = useLocation();
+
+  const handleOpenAssessment = (country) => {
+    if (country) setAssessmentCountry(country);
+    setIsAssessmentOpen(true);
+  };
 
   // Scroll to top on route change
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [location.pathname]);
 
-  // Initialize Lenis smooth scroll
+  // Initialize Lenis smooth scroll only on non-touch desktop devices
   useEffect(() => {
-    // Only on larger screens and when motion is not reduced
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion || window.innerWidth < 768) {
+    const isTouch = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0) || window.innerWidth < 768;
+    
+    if (prefersReducedMotion || isTouch) {
       return;
     }
 
-    const lenis = new Lenis({
-      duration: 1.2,
-      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      smoothWheel: true,
-    });
+    let lenisInstance = null;
+    let animId = null;
 
-    function raf(time) {
-      lenis.raf(time);
-      requestAnimationFrame(raf);
-    }
+    import('lenis').then(({ default: Lenis }) => {
+      lenisInstance = new Lenis({
+        duration: 1.2,
+        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+        orientation: 'vertical',
+        smoothWheel: true,
+      });
 
-    const animId = requestAnimationFrame(raf);
+      function raf(time) {
+        lenisInstance?.raf(time);
+        animId = requestAnimationFrame(raf);
+      }
+
+      animId = requestAnimationFrame(raf);
+    }).catch(() => {});
 
     return () => {
-      cancelAnimationFrame(animId);
-      lenis.destroy();
+      if (animId) cancelAnimationFrame(animId);
+      lenisInstance?.destroy();
     };
   }, []);
 
   return (
-    <div className="relative min-h-screen bg-navy-950 text-slate-100 flex flex-col selection:bg-gold-500/25 selection:text-gold-200">
+    <div className="relative min-h-screen bg-page text-ink-900 flex flex-col selection:bg-gold-500/20 selection:text-gold-700">
       <ScrollProgressBar />
+      <Background3DEffect />
 
-      <Navbar onOpenAssessment={() => setIsAssessmentOpen(true)} />
+      <Navbar onOpenAssessment={() => handleOpenAssessment()} />
 
-      <main className="flex-1 w-full pt-20">
-        <Outlet context={{ onOpenAssessment: () => setIsAssessmentOpen(true) }} />
+      <main id="main-content" className="flex-1 w-full pt-20 aurora-grain relative z-10">
+        <Outlet context={{ onOpenAssessment: handleOpenAssessment }} />
       </main>
 
       <Footer />
 
+      <LiveSuccessToast onOpenAssessment={() => handleOpenAssessment()} />
       <FloatingWhatsApp />
-      <StickyBookingCTA onOpenAssessment={() => setIsAssessmentOpen(true)} />
+      <StickyBookingCTA onOpenAssessment={() => handleOpenAssessment()} />
 
       <EligibilityModal
         isOpen={isAssessmentOpen}
         onClose={() => setIsAssessmentOpen(false)}
+        initialCountry={assessmentCountry}
       />
     </div>
   );
 }
+

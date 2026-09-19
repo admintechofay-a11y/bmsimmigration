@@ -1,12 +1,14 @@
 import React, { useRef, useState } from 'react';
+import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 export default function TiltCard({ children, className = '', maxTilt = 12, glare = true }) {
   const cardRef = useRef(null);
   const [transformStyle, setTransformStyle] = useState('');
   const [glarePosition, setGlarePosition] = useState({ x: 50, y: 50, opacity: 0 });
+  const { shouldReduceMotion } = useReducedMotion();
 
   const handleMouseMove = (e) => {
-    if (!cardRef.current) return;
+    if (shouldReduceMotion || !cardRef.current) return;
     const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;

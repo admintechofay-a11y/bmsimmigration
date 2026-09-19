@@ -11,14 +11,19 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@fontsource/inter": "^5.3.0",
+    "@fontsource/sora": "^5.3.0",
     "@react-three/drei": "^9.112.0",
     "@react-three/fiber": "^8.17.6",
     "canvas-confetti": "^1.9.3",
     "clsx": "^2.1.1",
+    "compression": "^1.8.2",
     "cors": "^2.8.5",
     "express": "^4.19.2",
+    "express-rate-limit": "^8.7.0",
     "framer-motion": "^11.5.4",
     "gsap": "^3.12.5",
+    "helmet": "^8.3.0",
     "lenis": "^1.1.9",
     "lucide-react": "^0.439.0",
     "react": "^18.3.1",
@@ -35,8 +40,12 @@
     "@vitejs/plugin-react": "^4.3.1",
     "autoprefixer": "^10.4.20",
     "concurrently": "^8.2.2",
+    "playwright": "^1.63.0",
     "postcss": "^8.4.45",
+    "rollup-plugin-visualizer": "^7.1.1",
+    "sharp": "^0.35.4",
     "tailwindcss": "^3.4.10",
-    "vite": "^5.4.2"
+    "vite": "^5.4.2",
+    "vite-plugin-compression": "^0.5.1"
   }
 }

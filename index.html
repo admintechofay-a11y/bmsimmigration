@@ -1,19 +1,125 @@
 <!DOCTYPE html>
-<html lang="en" class="dark scroll-smooth">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/src/assets/logo.png" />
+    <link rel="icon" type="image/webp" href="/src/assets/images/logo.webp" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BMS Immigration | Trusted Study Visa & Immigration Consultancy</title>
     <meta name="description" content="BMS Immigration Services provides expert guidance for study visas, tourist visas, PR pathways, refusal cases, and inside Canada solutions with transparent processes and high success rates." />
+    <meta name="theme-color" content="#F7F9FC" />
     
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,600&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <style>
+      /* Critical Instant Shell Styles - Aurora Light */
+      body {
+        margin: 0;
+        background-color: #F7F9FC;
+        color: #0B1B3A;
+        font-family: -apple-system, BlinkMacSystemFont, 'Inter', Roboto, sans-serif;
+        overflow-x: hidden;
+      }
+      .app-skeleton {
+        min-height: 100vh;
+        background: #F7F9FC;
+        display: flex;
+        flex-direction: column;
+      }
+      .skeleton-nav {
+        height: 72px;
+        background: #FFFFFF;
+        border-bottom: 1px solid #E3EAF5;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 2rem;
+      }
+      .skeleton-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .skeleton-logo {
+        width: 140px;
+        height: 44px;
+        background: rgba(200, 146, 31, 0.1);
+        border-radius: 8px;
+      }
+      .skeleton-btn {
+        width: 130px;
+        height: 38px;
+        background: linear-gradient(135deg, #0B1B3A, #1A3366);
+        border-radius: 10px;
+        opacity: 0.9;
+      }
+      .skeleton-hero {
+        max-width: 1200px;
+        margin: 4rem auto;
+        padding: 0 1.5rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 1.5rem;
+      }
+      .skeleton-pill {
+        width: 240px;
+        height: 32px;
+        border-radius: 9999px;
+        background: rgba(200, 146, 31, 0.1);
+        border: 1px solid rgba(200, 146, 31, 0.3);
+      }
+      .skeleton-title {
+        width: 80%;
+        max-width: 600px;
+        height: 52px;
+        background: rgba(11, 27, 58, 0.06);
+        border-radius: 12px;
+      }
+      .skeleton-text {
+        width: 65%;
+        max-width: 500px;
+        height: 20px;
+        background: rgba(11, 27, 58, 0.04);
+        border-radius: 6px;
+      }
+      .sr-skip {
+        position: absolute;
+        top: -9999px;
+        left: -9999px;
+      }
+      .sr-skip:focus {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 99999;
+        background: #C8921F;
+        color: #FFFFFF;
+        padding: 0.75rem 1.25rem;
+        font-weight: 700;
+        border-radius: 0.5rem;
+        outline: 2px solid #0B1B3A;
+      }
+    </style>
   </head>
-  <body class="bg-navy-950 text-slate-100 antialiased selection:bg-gold-500/30 selection:text-gold-300 overflow-x-hidden">
-    <div id="root"></div>
+  <body class="bg-page text-ink-900 antialiased selection:bg-gold-500/20 selection:text-gold-700 overflow-x-hidden">
+    <a href="#main-content" class="sr-skip">Skip to main content</a>
+    
+    <div id="root">
+      <!-- Instant Branded Shell rendered before JS hydration -->
+      <div class="app-skeleton">
+        <header class="skeleton-nav">
+          <div class="skeleton-brand">
+            <div class="skeleton-logo"></div>
+          </div>
+          <div class="skeleton-btn"></div>
+        </header>
+        <div class="skeleton-hero">
+          <div class="skeleton-pill"></div>
+          <div class="skeleton-title"></div>
+          <div class="skeleton-text"></div>
+        </div>
+      </div>
+    </div>
+    
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>

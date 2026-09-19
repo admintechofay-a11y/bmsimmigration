@@ -1,45 +1,63 @@
-import React, { useRef, useMemo, Suspense, useState, useEffect } from 'react';
-import { Canvas, useFrame } from '@react-three/fiber';
+import React, { useRef, useMemo, useState, useEffect } from 'react';
+import { useFrame } from '@react-three/fiber';
 import { OrbitControls, Float, Html } from '@react-three/drei';
-import * as THREE from 'three';
+import {
+  Vector3,
+  BufferGeometry,
+  Float32BufferAttribute,
+  QuadraticBezierCurve3,
+  DoubleSide,
+} from 'three';
 import FloatingAirplane from './FloatingAirplane';
 import FloatingPassport from './FloatingPassport';
-import CanvasLoader from './CanvasLoader';
 import Globe2DFallback from './Globe2DFallback';
-import { useReducedMotion } from '../../hooks/useReducedMotion';
+import SceneViewport from './SceneViewport';
+import {
+  StudioLighting,
+  ProceduralEnvironment,
+  GroundContactShadow,
+  CompassMini,
+  GoldMaterial,
+  NavyMaterial,
+} from './common/SceneKit';
 
-// Helper: Convert Lat/Long into 3D Vector3 Cartesian coordinates on a sphere of radius R
-function latLongToVector3(lat, lon, radius = 2.5) {
+// Helper: Convert Lat/Long into 3D Cartesian coordinates on a sphere of radius R
+function latLongToVector3(lat, lon, radius = 2.4) {
   const phi = (90 - lat) * (Math.PI / 180);
   const theta = (lon + 180) * (Math.PI / 180);
   const x = -(radius * Math.sin(phi) * Math.cos(theta));
   const z = radius * Math.sin(phi) * Math.sin(theta);
   const y = radius * Math.cos(phi);
-  return new THREE.Vector3(x, y, z);
+  return new Vector3(x, y, z);
 }
 
-// Glowing Flight Arcs
-function FlightArc({ startLat, startLon, endLat, endLon, color = '#F4C76A', altitude = 1.35 }) {
+// Flight Arc with deterministic geometry disposal
+function FlightArc({ startLat, startLon, endLat, endLon, color = '#C8921F', altitude = 1.35 }) {
   const arcPoints = useMemo(() => {
-    const start = latLongToVector3(startLat, startLon, 2.5);
-    const end = latLongToVector3(endLat, endLon, 2.5);
-    
-    // Middle control point lifted outwards
-    const mid = new THREE.Vector3().addVectors(start, end).multiplyScalar(0.5);
-    const distance = start.distanceTo(end);
-    mid.normalize().multiplyScalar(2.5 + distance * 0.38 * altitude);
+    const start = latLongToVector3(startLat, startLon, 2.4);
+    const end = latLongToVector3(endLat, endLon, 2.4);
 
-    const curve = new THREE.QuadraticBezierCurve3(start, mid, end);
-    return curve.getPoints(50);
+    const mid = new Vector3().addVectors(start, end).multiplyScalar(0.5);
+    const distance = start.distanceTo(end);
+    mid.normalize().multiplyScalar(2.4 + distance * 0.35 * altitude);
+
+    const curve = new QuadraticBezierCurve3(start, mid, end);
+    return curve.getPoints(36);
   }, [startLat, startLon, endLat, endLon, altitude]);
 
   const lineGeometry = useMemo(() => {
-    return new THREE.BufferGeometry().setFromPoints(arcPoints);
+    return new BufferGeometry().setFromPoints(arcPoints);
   }, [arcPoints]);
+
+  useEffect(() => {
+    return () => {
+      lineGeometry.dispose();
+    };
+  }, [lineGeometry]);
 
   return (
     <line geometry={lineGeometry}>
-      <lineBasicMaterial color={color} transparent opacity={0.85} linewidth={2} />
+      <lineBasicMaterial color={color} transparent opacity={0.8} linewidth={2} />
     </line>
   );
 }
@@ -47,11 +65,10 @@ function FlightArc({ startLat, startLon, endLat, endLon, color = '#F4C76A', alti
 // Interactive Destination Pin with Beacon
 function DestinationPin({ lat, lon, label, flag, isHQ = false }) {
   const [hovered, setHovered] = useState(false);
-  const pos = useMemo(() => latLongToVector3(lat, lon, 2.52), [lat, lon]);
+  const pos = useMemo(() => latLongToVector3(lat, lon, 2.42), [lat, lon]);
 
   return (
     <group position={pos}>
-      {/* Pin head */}
       <mesh
         onPointerOver={(e) => {
           e.stopPropagation();
@@ -59,31 +76,29 @@ function DestinationPin({ lat, lon, label, flag, isHQ = false }) {
         }}
         onPointerOut={() => setHovered(false)}
       >
-        <sphereGeometry args={[isHQ ? 0.09 : 0.07, 16, 16]} />
+        <sphereGeometry args={[isHQ ? 0.085 : 0.065, 16, 16]} />
         <meshStandardMaterial
-          color={isHQ ? '#FDE047' : hovered ? '#60A5FA' : '#F4C76A'}
-          emissive={isHQ ? '#D4A44A' : hovered ? '#2F80ED' : '#B8860B'}
-          emissiveIntensity={0.8}
+          color={isHQ ? '#C8921F' : hovered ? '#2F80ED' : '#C8921F'}
+          roughness={0.2}
+          metalness={0.8}
         />
       </mesh>
 
-      {/* Pulsing Beacon Ring */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[0.08, 0.14, 32]} />
+        <ringGeometry args={[0.075, 0.12, 24]} />
         <meshBasicMaterial
-          color={isHQ ? '#FDE047' : '#D4A44A'}
+          color={isHQ ? '#C8921F' : hovered ? '#2F80ED' : '#0B1B3A'}
           transparent
-          opacity={hovered ? 0.9 : 0.5}
-          side={THREE.DoubleSide}
+          opacity={hovered ? 0.9 : 0.4}
+          side={DoubleSide}
         />
       </mesh>
 
-      {/* Tooltip on Hover */}
       {hovered && (
         <Html distanceFactor={8} position={[0, 0.25, 0]} center>
-          <div className="bg-navy-950/95 border border-gold-500/50 text-white text-xs px-3 py-1.5 rounded-xl shadow-gold-glow backdrop-blur-md whitespace-nowrap flex items-center gap-2 pointer-events-none">
+          <div className="bg-white/95 border border-slate-200 text-navy-950 text-xs px-3 py-1.5 rounded-xl shadow-card backdrop-blur-md whitespace-nowrap flex items-center gap-2 pointer-events-none">
             <span className="text-base">{flag}</span>
-            <span className="font-bold text-gold-300">{label}</span>
+            <span className="font-bold text-navy-900">{label}</span>
           </div>
         </Html>
       )}
@@ -91,100 +106,85 @@ function DestinationPin({ lat, lon, label, flag, isHQ = false }) {
   );
 }
 
-// 3D Globe Sphere + Continental Point Grid
+// 3D Globe with vertex shader / Points cap
 function InteractiveGlobe() {
   const globeGroupRef = useRef();
 
-  // Create dotted landmasses particle grid with realistic density
   const particles = useMemo(() => {
     const coords = [];
-    const count = 2400;
+    const count = 1500; // Efficient GPU budget
     for (let i = 0; i < count; i++) {
-      const phi = Math.acos(1 - 2 * (i + 0.5) / count);
+      const phi = Math.acos(1 - (2 * (i + 0.5)) / count);
       const theta = Math.PI * (1 + Math.sqrt(5)) * i;
-      
-      const r = 2.52;
+
+      const r = 2.42;
       const x = r * Math.sin(phi) * Math.cos(theta);
       const y = r * Math.cos(phi);
       const z = r * Math.sin(phi) * Math.sin(theta);
       coords.push(x, y, z);
     }
-    const geom = new THREE.BufferGeometry();
-    geom.setAttribute('position', new THREE.Float32BufferAttribute(coords, 3));
+    const geom = new BufferGeometry();
+    geom.setAttribute('position', new Float32BufferAttribute(coords, 3));
     return geom;
   }, []);
 
-  // Smooth slow auto-rotation
+  useEffect(() => {
+    return () => {
+      particles.dispose();
+    };
+  }, [particles]);
+
   useFrame(({ clock }) => {
     if (!globeGroupRef.current) return;
-    globeGroupRef.current.rotation.y = clock.getElapsedTime() * 0.08;
+    globeGroupRef.current.rotation.y = clock.getElapsedTime() * 0.06;
   });
 
-  // Hub coordinates
   const india = { lat: 28.6, lon: 77.2 };
   const destinations = [
-    { label: 'Canada (Toronto)', flag: '🇨🇦', lat: 43.65, lon: -79.38, color: '#F4C76A' },
-    { label: 'UK (London)', flag: '🇬🇧', lat: 51.5, lon: -0.12, color: '#60A5FA' },
-    { label: 'USA (New York)', flag: '🇺🇸', lat: 40.71, lon: -74.0, color: '#F4C76A' },
-    { label: 'Australia (Sydney)', flag: '🇦🇺', lat: -33.86, lon: 151.2, color: '#60A5FA' },
-    { label: 'Germany (Frankfurt)', flag: '🇩🇪', lat: 50.11, lon: 8.68, color: '#F4C76A' }
+    { id: 'ca', label: 'Canada (Toronto)', flag: '🇨🇦', lat: 43.65, lon: -79.38, color: '#C8921F' },
+    { id: 'uk', label: 'UK (London)', flag: '🇬🇧', lat: 51.5, lon: -0.12, color: '#2F80ED' },
+    { id: 'us', label: 'USA (New York)', flag: '🇺🇸', lat: 40.71, lon: -74.0, color: '#C8921F' },
+    { id: 'au', label: 'Australia (Sydney)', flag: '🇦🇺', lat: -33.86, lon: 151.2, color: '#2F80ED' },
+    { id: 'de', label: 'Germany (Frankfurt)', flag: '🇩🇪', lat: 50.11, lon: 8.68, color: '#0EA5C6' },
   ];
 
   return (
     <group ref={globeGroupRef}>
-      {/* Oceanic Core Sphere with Rich Navy/Sapphire Glaze */}
+      {/* Deep Navy Ocean Core */}
       <mesh>
-        <sphereGeometry args={[2.5, 64, 64]} />
-        <meshStandardMaterial
-          color="#0B1838"
-          emissive="#060F26"
-          emissiveIntensity={0.5}
-          roughness={0.4}
-          metalness={0.4}
-        />
+        <sphereGeometry args={[2.4, 40, 40]} />
+        <NavyMaterial roughness={0.35} metalness={0.25} />
       </mesh>
 
-      {/* Latitude & Longitude Wireframe Grid */}
+      {/* Subtle Longitudinal / Latitudinal Grid */}
       <mesh>
-        <sphereGeometry args={[2.508, 36, 36]} />
+        <sphereGeometry args={[2.408, 24, 24]} />
         <meshBasicMaterial
           wireframe
           color="#2F80ED"
           transparent
-          opacity={0.15}
+          opacity={0.14}
         />
       </mesh>
 
       {/* Golden Equator Ring */}
       <mesh rotation={[Math.PI / 2, 0, 0]}>
-        <ringGeometry args={[2.512, 2.525, 64]} />
-        <meshBasicMaterial color="#D4A44A" transparent opacity={0.35} side={THREE.DoubleSide} />
+        <ringGeometry args={[2.41, 2.425, 40]} />
+        <meshBasicMaterial color="#C8921F" transparent opacity={0.4} side={DoubleSide} />
       </mesh>
 
-      {/* Atmospheric Outer Halo */}
-      <mesh>
-        <sphereGeometry args={[2.68, 48, 48]} />
-        <meshStandardMaterial
-          color="#2F80ED"
-          transparent
-          opacity={0.12}
-          side={THREE.BackSide}
-          roughness={1}
-        />
-      </mesh>
-
-      {/* Continental Gold Dot Particles */}
+      {/* Continental Gold Dot Points */}
       <points geometry={particles}>
         <pointsMaterial
-          size={0.04}
-          color="#F4C76A"
+          size={0.038}
+          color="#C8921F"
           transparent
-          opacity={0.75}
+          opacity={0.85}
           sizeAttenuation
         />
       </points>
 
-      {/* Origin Hub: India (HQ) */}
+      {/* India HQ */}
       <DestinationPin
         lat={india.lat}
         lon={india.lon}
@@ -193,9 +193,9 @@ function InteractiveGlobe() {
         isHQ={true}
       />
 
-      {/* Flight Arcs and Destination Hubs */}
+      {/* 5 Flight Arcs & Pins to Canada, UK, USA, Australia, Germany */}
       {destinations.map((dest, idx) => (
-        <React.Fragment key={idx}>
+        <React.Fragment key={dest.id}>
           <DestinationPin
             lat={dest.lat}
             lon={dest.lon}
@@ -208,70 +208,60 @@ function InteractiveGlobe() {
             endLat={dest.lat}
             endLon={dest.lon}
             color={dest.color}
-            altitude={1.2 + idx * 0.08}
+            altitude={1.15 + idx * 0.08}
           />
         </React.Fragment>
       ))}
 
-      {/* Orbiting 3D Golden Aircraft */}
-      <FloatingAirplane orbitRadius={3.2} speed={0.35} />
+      {/* Golden procedural jet orbiting the globe */}
+      <FloatingAirplane orbitRadius={3.0} speed={0.32} />
     </group>
   );
 }
 
-// Scene Root Container
+// Scene Root Container using SceneViewport for hard-budget WebGL management
 export default function GlobeCanvas() {
-  const { shouldReduceMotion } = useReducedMotion();
-  const [hasWebGLError, setHasWebGLError] = useState(false);
-
-  useEffect(() => {
-    try {
-      const canvas = document.createElement('canvas');
-      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
-      if (!gl) {
-        setHasWebGLError(true);
-      }
-    } catch {
-      setHasWebGLError(true);
-    }
-  }, []);
-
-  if (shouldReduceMotion || hasWebGLError) {
-    return <Globe2DFallback />;
-  }
 
   return (
-    <div className="relative w-full h-[540px] lg:h-[620px] max-w-[680px] mx-auto flex items-center justify-center">
-      {/* Background radial glow */}
-      <div className="absolute w-[450px] h-[450px] rounded-full bg-electric-500/15 blur-[120px] pointer-events-none" />
-      <div className="absolute w-[380px] h-[380px] rounded-full bg-gold-500/15 blur-[100px] pointer-events-none" />
+    <div className="relative w-full h-[480px] lg:h-[540px] max-w-[580px] mx-auto flex items-center justify-center">
+      {/* Soft warm/cool light background ambiance (no dark glowing circles) */}
+      <div className="absolute w-[440px] h-[440px] rounded-full bg-blue-500/5 blur-[90px] pointer-events-none" />
+      <div className="absolute w-[360px] h-[360px] rounded-full bg-amber-500/5 blur-[80px] pointer-events-none" />
 
-      <Canvas
-        camera={{ position: [0, 1.0, 5.5], fov: 45 }}
-        gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
+      <SceneViewport
+        sceneId="hero-globe"
+        fallback={<Globe2DFallback />}
+        camera={{ position: [0, 0.3, 7.5], fov: 42 }}
         className="w-full h-full cursor-grab active:cursor-grabbing"
+        controls={
+          <OrbitControls
+            enableZoom={false}
+            enablePan={false}
+            autoRotate={false}
+            maxPolarAngle={Math.PI / 1.7}
+            minPolarAngle={Math.PI / 3}
+            dampingFactor={0.05}
+          />
+        }
       >
-        <ambientLight intensity={1.5} />
-        <directionalLight position={[6, 4, 6]} intensity={2.5} color="#FFFFFF" />
-        <pointLight position={[-5, -3, -5]} intensity={2.0} color="#2F80ED" />
-        <pointLight position={[4, 5, 3]} intensity={2.2} color="#F4C76A" />
+        <StudioLighting />
+        <ProceduralEnvironment />
 
-        <Suspense fallback={<CanvasLoader />}>
-          <Float speed={1.5} rotationIntensity={0.25} floatIntensity={0.35}>
+        <Float speed={1.3} rotationIntensity={0.15} floatIntensity={0.2}>
+          {/* Scaled 18-20% smaller (0.60 vs 0.72) to provide generous whitespace */}
+          <group scale={[0.59, 0.59, 0.59]} position={[0, 0.05, 0]}>
             <InteractiveGlobe />
-            <FloatingPassport position={[2.5, -1.2, 1.0]} />
-          </Float>
-        </Suspense>
+            <FloatingPassport position={[2.0, -1.0, 1.0]} />
+            {/* Small Navigation Compass Floating on Side */}
+            <group position={[-2.2, -0.9, 0.8]} rotation={[0.4, 0.5, -0.2]}>
+              <CompassMini scale={0.7} />
+            </group>
+          </group>
+        </Float>
 
-        <OrbitControls
-          enableZoom={false}
-          enablePan={false}
-          autoRotate={false}
-          maxPolarAngle={Math.PI / 1.7}
-          minPolarAngle={Math.PI / 3}
-          dampingFactor={0.05}
-        />
-      </Canvas>
+        {/* Baked Ground Contact Shadow for light theme grounded feel */}
+        <GroundContactShadow position={[0, -2.1, 0]} opacity={0.32} scale={5.5} />
+      </SceneViewport>
     </div>
   );
 }

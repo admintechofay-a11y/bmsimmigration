@@ -30,3 +30,9 @@ Thumbs.db
 .env.production
 .env.local
 !.env.example
+
+# Temporary / QA artifacts
+qa-screenshots/
+stats.html
+vite.config.js.timestamp-*
+src/assets/images/globe-poster-tmp.webp

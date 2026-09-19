@@ -1,19 +1,19 @@
 // Single source of truth for all content on BMS Immigration
 // Sourced from live bmsimmigration.in pages: homepage, services, about_us, and contact.
 
-import logoImg from '../assets/logo.png';
-import studyVisaImg from '../assets/images/study-visa.jpg';
-import touristVisaImg from '../assets/images/tourist-visa.avif';
-import sopDocImg from '../assets/images/sop-documentation.avif';
-import refusalCasesImg from '../assets/images/refusal-cases.avif';
-import insideCanadaImg from '../assets/images/inside-canada.avif';
-import offerLetterImg from '../assets/images/offer-letter.avif';
-import aboutHeroImg from '../assets/images/about-hero.avif';
-import consultationBannerImg from '../assets/images/consultation-banner.avif';
-import countryUsaImg from '../assets/images/country-usa.png';
-import countryCanadaImg from '../assets/images/country-canada.png';
-import countryUkImg from '../assets/images/country-uk.png';
-import countryAusImg from '../assets/images/country-australia.png';
+import logoImg from '../assets/images/logo.webp';
+import studyVisaImg from '../assets/images/study-visa.webp';
+import touristVisaImg from '../assets/images/tourist-visa.webp';
+import sopDocImg from '../assets/images/sop-documentation.webp';
+import refusalCasesImg from '../assets/images/refusal-cases.webp';
+import insideCanadaImg from '../assets/images/inside-canada.webp';
+import offerLetterImg from '../assets/images/offer-letter.webp';
+import aboutHeroImg from '../assets/images/about-hero.webp';
+import consultationBannerImg from '../assets/images/consultation-banner.webp';
+import countryUsaImg from '../assets/images/country-usa.webp';
+import countryCanadaImg from '../assets/images/country-canada.webp';
+import countryUkImg from '../assets/images/country-uk.webp';
+import countryAusImg from '../assets/images/country-australia.webp';
 
 export const siteData = {
   company: {

@@ -8,44 +8,75 @@ export default {
   theme: {
     extend: {
       colors: {
+        page: '#F7F9FC',
+        surface: '#FFFFFF',
+        tint: '#EEF3FB',
+        ink: {
+          900: '#0B1B3A', // Primary Ink Navy Text
+          800: '#142952',
+          700: '#233866',
+          500: '#4A5B78', // Muted Text
+          400: '#64748B',
+          300: '#94A3B8',
+        },
         navy: {
-          950: '#030611',
-          900: '#050816',
-          850: '#080D1F',
-          800: '#0B1120',
-          700: '#111827',
-          600: '#1E293B',
+          950: '#060F24',
+          900: '#0B1B3A', // Deep Ink Navy
+          850: '#10244D',
+          800: '#1A3366',
+          700: '#264580',
+          600: '#3B5E9C',
+          100: '#EEF3FB',
+          50: '#F7F9FC',
         },
         gold: {
-          300: '#FDE047',
-          400: '#F4C76A',
-          500: '#D4A44A',
-          600: '#B8860B',
-          700: '#926707',
+          300: '#EAB308',
+          400: '#D97706',
+          500: '#C8921F', // Rich Gold (darkened for high contrast on white)
+          600: '#A16E14',
+          700: '#7D520C',
         },
         electric: {
           400: '#60A5FA',
-          500: '#2F80ED',
-          600: '#1E40AF',
+          500: '#2F80ED', // Electric Blue
+          600: '#1D4ED8',
+        },
+        teal: {
+          400: '#22D3EE',
+          500: '#0EA5C6', // Teal Accent
+          600: '#0891B2',
+        },
+        success: {
+          500: '#16A34A', // Success Green
+        },
+        border: {
+          light: '#E3EAF5',
+          subtle: '#EDF2F9',
         },
         brand: {
-          dark: '#050816',
-          surface: '#0B1120',
-          gold: '#D4A44A',
+          bg: '#F7F9FC',
+          surface: '#FFFFFF',
+          tint: '#EEF3FB',
+          ink: '#0B1B3A',
+          gold: '#C8921F',
           blue: '#2F80ED',
-          accent: '#F4C76A',
+          teal: '#0EA5C6',
         }
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        display: ['Playfair Display', 'serif'],
+        display: ['Sora', 'Inter', 'sans-serif'],
         sora: ['Sora', 'sans-serif'],
       },
       boxShadow: {
-        'gold-glow': '0 0 25px rgba(212, 164, 74, 0.25)',
-        'gold-elevated': '0 20px 60px rgba(212, 164, 74, 0.2)',
-        'blue-glow': '0 0 25px rgba(47, 128, 237, 0.25)',
-        'card-elevated': '0 25px 80px rgba(0, 0, 0, 0.65)',
+        'soft-sm': '0 2px 6px -1px rgba(11, 27, 58, 0.05), 0 1px 4px -1px rgba(11, 27, 58, 0.03)',
+        'soft-md': '0 10px 25px -5px rgba(11, 27, 58, 0.06), 0 4px 10px -2px rgba(11, 27, 58, 0.03)',
+        'soft-lg': '0 20px 40px -12px rgba(11, 27, 58, 0.08), 0 8px 16px -4px rgba(11, 27, 58, 0.04)',
+        'soft-elevated': '0 25px 60px -15px rgba(11, 27, 58, 0.12), 0 10px 20px -5px rgba(11, 27, 58, 0.05)',
+        'btn-navy': '0 6px 20px -4px rgba(11, 27, 58, 0.35)',
+        'btn-blue': '0 6px 20px -4px rgba(47, 128, 237, 0.4)',
+        'btn-gold': '0 6px 20px -4px rgba(200, 146, 31, 0.4)',
+        'card-elevated': '0 12px 32px -4px rgba(11, 27, 58, 0.07), 0 4px 12px -2px rgba(11, 27, 58, 0.04)',
       },
       animation: {
         'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
