@@ -165,11 +165,22 @@ export default function Footer() {
         </div>
 
         {/* Bottom Bar: Copyright & Attribution */}
-        <div className="pt-8 border-t border-border-light flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-500">
+        <div className="pt-8 border-t border-border-light flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-ink-500 text-center md:text-left">
           <p>© 2026 BMS Immigration Services. All Rights Reserved.</p>
           <div className="flex items-center gap-4">
             <span>Trusted Since 2019 • Building Global Futures</span>
           </div>
+          <p className="text-center md:text-right">
+            Design and developed by{' '}
+            <a
+              href="https://techofay-global-ventures.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gold-600 hover:text-gold-700 underline underline-offset-2 transition-colors font-medium"
+            >
+              Techofay Global Ventures
+            </a>
+          </p>
         </div>
       </div>
     </footer>
